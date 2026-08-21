@@ -4,7 +4,7 @@
 
 ## ▶ Experience
 
-https://acprofessionale.github.io/nnett/
+https://acprofessionale.github.io/annett/
 
 Eine digitale Geschichte über Regen, Stille, Verwandlung, Freiheit und Tanz.
 
