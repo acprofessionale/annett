@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>∆nnet und das Geräusch der Stille</title>
+<meta name="description" content="Eine kleine Geschichte vom Armadillo, vom Regen und von einem grünen Schmetterling.">
+<meta name="theme-color" content="#05070a">
+<meta name="color-scheme" content="dark">
+<link rel="preload" as="image" href="assets/04_notte_insetto.jpg">
+<style>
+:root{
+  --bg:#05070a;
+  --ink:#ded8ce;
+  --ink-mute:#8d8a82;
+  --green:#7fbf8f;
+  --red:#b4525a;
+  --gold:#c9a24a;
+  --rule:rgba(201,162,74,.20);
+  --measure:33rem;
+  --pad:clamp(1.25rem,6vw,2rem);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:auto}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Noto Serif","Times New Roman",serif;
+  font-size:clamp(16.5px,.98rem + .35vw,19px);
+  line-height:1.8;letter-spacing:.005em;
+  text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%;height:auto}
+::selection{background:rgba(127,191,143,.22);color:#fff}
+
+/* ---------- Fortschritt ---------- */
+#bar{position:fixed;top:0;left:0;height:1.5px;width:100%;transform:scaleX(0);transform-origin:0 50%;
+  background:linear-gradient(90deg,var(--green),var(--gold) 55%,var(--red));opacity:.7;z-index:60;will-change:transform}
+
+/* ---------- Regen ---------- */
+#rain{position:fixed;inset:-10% 0;z-index:2;pointer-events:none;opacity:.30;mix-blend-mode:screen}
+#rain i{position:absolute;inset:0;display:block;
+  background-image:repeating-linear-gradient(96deg,transparent 0 34px,rgba(190,214,225,.55) 34px 35px);
+  background-size:auto 190px;animation:fall 1.15s linear infinite}
+#rain i:nth-child(2){opacity:.5;filter:blur(.6px);
+  background-image:repeating-linear-gradient(93deg,transparent 0 58px,rgba(190,214,225,.4) 58px 59px);
+  background-size:auto 280px;animation-duration:2.1s}
+@keyframes fall{from{transform:translate3d(0,-190px,0)}to{transform:translate3d(0,0,0)}}
+
+/* ---------- Startschleier ---------- */
+#gate{display:none;position:fixed;inset:0;height:100dvh;z-index:9998;margin:0;border:0;
+  padding:calc(var(--pad) + env(safe-area-inset-top)) var(--pad) calc(var(--pad) + env(safe-area-inset-bottom));
+  background:#05070a;color:var(--ink);font:inherit;text-align:center;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;place-items:center;transition:opacity 1.3s ease}
+body.gated #gate{display:grid}
+body.gated{overflow:hidden}
+body.gated #ui{display:none}
+body.gated #hero img,body.gated #dot,body.gated #heart,body.gated #heart path{animation-play-state:paused}
+#gate.gone{opacity:0;pointer-events:none}
+#gate .inner{display:grid;justify-items:center;max-width:24rem;
+  animation:gateIn 1.6s cubic-bezier(.22,.68,.32,1) both}
+@keyframes gateIn{from{opacity:0;transform:translate3d(0,10px,0)}to{opacity:1;transform:none}}
+#gate .g{width:6px;height:6px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 15px 3px rgba(127,191,143,.42);margin-bottom:1.6rem;animation:breathe 4.4s ease-in-out infinite}
+#gate .n{display:block;font-size:.8rem;letter-spacing:.55em;color:var(--gold);padding-left:.55em;margin-bottom:.9rem}
+#gate .t{display:block;font-size:clamp(1.4rem,1rem + 2.6vw,2.05rem);line-height:1.3;color:#f0eae0;text-wrap:balance}
+#gate .cta{display:block;margin-top:2.6rem;font:400 .66rem/1.7 system-ui,sans-serif;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--ink-mute);animation:pulse 3.4s ease-in-out 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.95}}
+
+/* ---------- Bedienung ---------- */
+#ui{position:fixed;z-index:9999;display:grid;gap:.6rem;
+  bottom:calc(1rem + env(safe-area-inset-bottom));
+  right:calc(1rem + env(safe-area-inset-right))}
+#ui button{width:48px;height:48px;min-width:48px;min-height:48px;padding:0;border-radius:50%;
+  border:1px solid rgba(201,162,74,.26);background:rgba(8,11,14,.82);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  color:var(--ink-mute);display:grid;place-items:center;cursor:pointer;opacity:.9;
+  -webkit-tap-highlight-color:transparent;transition:color .35s,border-color .35s,opacity .35s,transform .15s}
+#ui button[hidden]{display:none}
+#ui button:active{transform:scale(.93)}
+#ui button[aria-pressed=true]{color:var(--green);border-color:rgba(127,191,143,.45);opacity:1}
+#ui svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+#ui .a,#ui .b{display:none}
+#ui button[aria-pressed=true] .a{display:block}
+#ui button[aria-pressed=false] .b{display:block}
+
+/* ---------- Szenen ---------- */
+.scene{position:relative;z-index:3;padding:clamp(4rem,17vh,9rem) var(--pad)}
+.wrap{max-width:var(--measure);margin:0 auto;text-align:center}
+p{margin:0 0 1.45em;text-wrap:pretty}
+p:last-child{margin-bottom:0}
+em{color:#e8e2d8}
+
+/* Einblenden */
+.r{opacity:0;transform:translate3d(0,14px,0);transition:opacity 1.1s ease,transform 1.1s cubic-bezier(.22,.68,.32,1)}
+.r.in{opacity:1;transform:none}
+.r:nth-child(2){transition-delay:.08s}.r:nth-child(3){transition-delay:.16s}
+.r:nth-child(4){transition-delay:.24s}.r:nth-child(5){transition-delay:.3s}
+
+/* Kapitel-Marke */
+.chapter{font:400 .68rem/1 system-ui,sans-serif;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--ink-mute);margin:0 0 2.2rem;padding-left:.42em}
+.chapter.g{color:rgba(127,191,143,.75)}
+.chapter.d{color:rgba(180,82,90,.8)}
+.chapter.o{color:rgba(201,162,74,.8)}
+
+.beat{color:#efe9df;letter-spacing:.012em}
+.whisper{color:var(--green);font-style:italic}
+.kiss{color:var(--red)}
+.wing{color:var(--green)}
+.quote{font-size:1.16em;color:#f2ece2;letter-spacing:.012em;margin:1.9em 0}
+
+hr.rule{border:0;height:1px;margin:clamp(2.5rem,8vh,4rem) auto;position:relative;overflow:visible;
+  background:linear-gradient(90deg,transparent,var(--rule) 22%,var(--rule) 78%,transparent)}
+hr.rule::after{content:"";position:absolute;top:50%;left:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+  border-radius:50%;background:var(--green);box-shadow:0 0 10px 2px rgba(127,191,143,.35);animation:breathe 5.5s ease-in-out infinite}
+hr.rule.d::after{background:var(--red);box-shadow:0 0 10px 2px rgba(180,82,90,.32)}
+@keyframes breathe{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}
+
+/* ---------- Bildrahmen ---------- */
+.frame{position:relative;overflow:hidden;margin:0 auto clamp(2.2rem,7vh,3.5rem);
+  width:min(100%,26rem);aspect-ratio:4/5;border-radius:2px;background:#04060a;
+  opacity:0;transform:translate3d(0,20px,0) scale(.985);
+  transition:opacity 1.5s ease,transform 1.5s cubic-bezier(.22,.68,.32,1)}
+.frame.in{opacity:1;transform:none}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:var(--pos,50% 50%);transform-origin:var(--pos,50% 50%);transform:scale(var(--z,1));
+  filter:saturate(.86) contrast(1.04) brightness(.9)}
+.frame::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(115% 78% at 50% 45%,transparent 38%,rgba(5,7,10,.55) 82%,rgba(5,7,10,.92) 100%);
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.13)}
+.frame figcaption{position:absolute;left:0;right:0;bottom:.7rem;z-index:2;
+  font:400 .6rem/1 system-ui,sans-serif;letter-spacing:.34em;text-transform:uppercase;
+  color:rgba(222,216,206,.5);padding-left:.34em}
+
+/* ---------- Prolog ---------- */
+#prolog{min-height:100svh;display:grid;align-content:center;padding-top:clamp(3rem,10vh,6rem)}
+@supports not (height:100svh){#prolog{min-height:100vh}}
+#hero{position:relative;width:min(100%,30rem);aspect-ratio:3/4;margin:0 auto clamp(2rem,7vh,3.2rem);overflow:hidden}
+#hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:45% 52%;
+  filter:brightness(1.35) contrast(1.1) saturate(.9);
+  opacity:0;animation:emerge 6.5s cubic-bezier(.3,.5,.2,1) .5s forwards}
+@keyframes emerge{from{opacity:0;filter:brightness(.25) contrast(1.3) saturate(.5)}
+  to{opacity:1;filter:brightness(1.35) contrast(1.1) saturate(.9)}}
+#hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(100% 70% at 42% 46%,transparent 22%,rgba(5,7,10,.6) 72%,rgba(5,7,10,1) 100%)}
+/* der grüne Punkt */
+#dot{position:absolute;left:41%;top:46%;width:5.5rem;height:5.5rem;margin:-2.75rem 0 0 -2.75rem;z-index:2;
+  border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(150,255,178,.85) 0%,rgba(127,191,143,.32) 26%,transparent 62%);
+  opacity:0;animation:spark 5.5s ease-in-out 3.4s infinite}
+@keyframes spark{0%,100%{opacity:.18;transform:scale(.72)}50%{opacity:.95;transform:scale(1)}}
+/* das lineare Herz */
+#heart{position:absolute;left:41%;top:46%;width:6.6rem;height:6rem;margin:-3.4rem 0 0 -3.3rem;z-index:3;
+  pointer-events:none;opacity:0;animation:heartIn 2s ease 4.6s forwards}
+#heart path{fill:none;stroke:var(--red);stroke-width:2.2;stroke-linecap:round;opacity:.62;
+  stroke-dasharray:300;stroke-dashoffset:300;animation:draw 5s cubic-bezier(.4,0,.2,1) 4.8s forwards}
+@keyframes heartIn{to{opacity:1}}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+#prolog .mark{margin:0 0 1.6rem;opacity:.8;
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:clamp(.65rem,2.6vw,1rem)}
+#prolog .mark .sym{width:clamp(1.35rem,5.2vw,1.65rem);height:clamp(1.35rem,5.2vw,1.65rem)}
+h1{font-weight:400;font-size:clamp(1.7rem,1.1rem + 3.1vw,2.6rem);line-height:1.24;margin:0 0 1rem;
+  color:#f0eae0;text-wrap:balance}
+h1 .accent{color:var(--gold)}
+.subtitle{margin:0 auto;max-width:25rem;font-style:italic;font-size:.96rem;line-height:1.65;
+  color:var(--ink-mute);text-wrap:balance}
+.opening{margin:clamp(2.4rem,8vh,3.6rem) auto 0;max-width:27rem;color:#e6e0d6;text-wrap:balance}
+.hint{margin-top:clamp(2.4rem,8vh,3.6rem);font:400 .62rem/1 system-ui,sans-serif;letter-spacing:.4em;
+  text-transform:uppercase;color:var(--ink-mute);opacity:.6;animation:drift 3.4s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(5px);opacity:.75}}
+
+/* ---------- Glyphen ----------
+   .scene ist ein eigener Stacking Context, deshalb hat mix-blend-mode:screen
+   dort keinen Hintergrund und das schwarze JPEG-Feld bliebe stehen. Der Rahmen
+   malt den Seitengrund selbst; Reveal und Float liegen auf ihm, damit Feld und
+   Bild sich immer exakt decken. */
+.glyph{width:min(58%,13rem);margin:0 auto clamp(2rem,6vh,3rem);background:var(--bg);
+  opacity:0;transform:scale(.9);transition:opacity 1.6s ease,transform 1.6s cubic-bezier(.22,.68,.32,1)}
+.glyph>img{display:block;width:100%;height:auto;max-height:min(38dvh,13rem);
+  object-fit:contain;mix-blend-mode:screen}
+.glyph.in{opacity:.94;transform:none}
+.glyph.float{animation:float 7s ease-in-out infinite}
+/* Aura: als Verlauf im Rahmen statt als drop-shadow. Ein Filter auf dem
+   deckenden Rechteck ergaebe immer einen rechteckigen Schein — und er liefe
+   vor dem Blending. Als Untergrund ist er rund und wird vom screen getragen. */
+.glyph.gold{background:radial-gradient(closest-side circle,rgba(201,162,74,.40),rgba(201,162,74,0)),var(--bg)}
+.glyph.rose{background:radial-gradient(closest-side circle,rgba(180,82,90,.40),rgba(180,82,90,0)),var(--bg)}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-11px) rotate(1.2deg)}}
+
+/* ---------- Finale ---------- */
+#finale{padding-bottom:clamp(6rem,20vh,11rem)}
+.dedication{font-size:1.08rem;letter-spacing:.14em;color:var(--gold);margin:0 0 1rem}
+.glyphs{margin:0;line-height:1;
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:clamp(.75rem,3.2vw,1.15rem)}
+.glyphs .sym{width:clamp(1.5rem,6vw,1.9rem);height:clamp(1.5rem,6vw,1.9rem)}
+
+/* ---------- Zeichen (SVG statt Emoji-Font) ---------- */
+.sym{flex:0 0 auto;display:block;overflow:visible;fill:none;stroke:currentColor;
+  stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;color:var(--ink-mute)}
+.sym.gold{color:var(--gold)}
+.sym.rose{color:var(--red)}
+.sym.leaf{color:var(--green)}
+
+@media (prefers-reduced-motion:reduce){
+  #rain{display:none}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .r,.frame,.glyph{opacity:1!important;transform:none!important}
+  #hero img{opacity:1}
+  #dot{opacity:.7}#heart{opacity:1}#heart path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false"
+     style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="sym-hat" viewBox="0 0 24 24">
+      <path d="M8 15.4V6.4c0-.8 1.8-1.4 4-1.4s4 .6 4 1.4v9"/>
+      <path d="M8 12.5h8"/>
+      <path d="M3.2 15.4h4.8M16 15.4h4.8"/>
+      <path d="M3.2 15.4c0 1.3 3.9 2.3 8.8 2.3s8.8-1 8.8-2.3"/>
+    </symbol>
+    <symbol id="sym-cherry" viewBox="0 0 24 24">
+      <circle cx="8.6" cy="16.8" r="3.5"/>
+      <circle cx="16.4" cy="18.2" r="3.1"/>
+      <path d="M15.6 5.2c-3 1.9 -6 5.1 -7 8.1"/>
+      <path d="M15.6 5.2c.7 3.4 1 6.7 .8 9.9"/>
+      <path d="M15.6 5.2c.6-2.4 2.6-3.9 5.2-3.9 .2 2.6 -1.5 4.4 -4 4.7"/>
+    </symbol>
+    <symbol id="sym-wing" viewBox="0 0 24 24">
+      <circle cx="12" cy="6.3" r="1"/>
+      <path d="M11.5 5.5C11 4.4 10.1 3.7 8.9 3.4"/>
+      <path d="M12.5 5.5c.5-1.1 1.4-1.8 2.6-2.1"/>
+      <path d="M12 7.6c.9 1.6 .9 8.2 0 10.6-.9-2.4-.9-9 0-10.6z"/>
+      <path d="M11.2 8.4C10.6 6.5 8.8 4.6 6.4 4.4 3.8 4.2 2.3 6.8 3.5 9.2c1.2 2.4 4.7 3.6 7.7 3.2z"/>
+      <path d="M12.8 8.4c.6-1.9 2.4-3.8 4.8-4 2.6-.2 4.1 2.4 2.9 4.8-1.2 2.4-4.7 3.6-7.7 3.2z"/>
+      <path d="M11.2 14.6c-.3 1.8-1.2 3.9-2.7 4.6-1.8.8-3.4-.5-2.8-2.5.6-1.9 3.3-3.1 5.5-3.3z"/>
+      <path d="M12.8 14.6c.3 1.8 1.2 3.9 2.7 4.6 1.8.8 3.4-.5 2.8-2.5-.6-1.9-3.3-3.1-5.5-3.3z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="bar" aria-hidden="true"></div>
+<div id="rain" aria-hidden="true"><i></i><i></i></div>
+<button id="gate" type="button" aria-label="Die Geschichte beginnen">
+  <span class="inner">
+    <span class="g" aria-hidden="true"></span>
+    <span class="n">∆nnet</span>
+    <span class="t">Das Geräusch der Stille</span>
+    <span class="cta">Berühren, um die Geschichte zu beginnen</span>
+  </span>
+</button>
+
+<div id="ui">
+  <button id="snd" type="button" aria-pressed="false" aria-label="Regen an oder aus" title="Regen">
+    <svg class="a" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.4h3.3L12 5.5v13L7.3 14.6H4z"/><path d="M16.1 9.4a3.9 3.9 0 0 1 0 5.2"/><path d="M18.7 7a7.3 7.3 0 0 1 0 10"/></svg>
+    <svg class="b" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.4h3.3L12 5.5v13L7.3 14.6H4z"/><path d="M16.4 9.8l4.6 4.4"/><path d="M21 9.8l-4.6 4.4"/></svg>
+  </button>
+  <button id="ply" type="button" aria-pressed="false" aria-label="Automatisch weiterblättern" title="Auto-Scroll">
+    <svg class="a" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 5.4v13.2"/><path d="M14.6 5.4v13.2"/></svg>
+    <svg class="b" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.6 5.2l11 6.8-11 6.8z"/></svg>
+  </button>
+</div>
+
+<main>
+
+<!-- ═══ PROLOG — DAS DUNKEL ═══ -->
+<section class="scene" id="prolog">
+  <div class="wrap">
+    <figure id="hero">
+      <img src="assets/04_notte_insetto.jpg" alt="Ein Geländer in der Nacht, ein winziger grüner Lichtpunkt" fetchpriority="high" decoding="async" width="1152" height="1536">
+      <span id="dot" aria-hidden="true"></span>
+      <svg id="heart" viewBox="0 0 100 90" aria-hidden="true">
+        <path d="M50 82 C20 60 5 42 5 27 C5 12 18 4 32 4 C41 4 47 9 50 14 C53 9 59 4 68 4 C82 4 95 12 95 27 C95 42 80 60 50 82"/>
+      </svg>
+    </figure>
+
+    <p class="mark" aria-hidden="true"><svg class="sym gold" viewBox="0 0 24 24"><use href="#sym-hat"/></svg><svg class="sym rose" viewBox="0 0 24 24"><use href="#sym-cherry"/></svg><svg class="sym leaf" viewBox="0 0 24 24"><use href="#sym-wing"/></svg></p>
+    <h1>∆nnet und das <span class="accent">Geräusch der Stille</span></h1>
+    <p class="subtitle">Eine kleine Geschichte vom Armadillo, vom Regen und von einem grünen Schmetterling.</p>
+    <p class="opening">Manchmal beginnt eine Geschichte mit etwas, das fast niemand bemerkt.</p>
+    <p class="hint">scrollen</p>
+  </div>
+</section>
+
+<!-- ═══ I — DIE NACHT ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <p class="chapter r">Die Nacht</p>
+    <p class="r">Es war Nacht, und die Nacht hatte beschlossen, leise zu sein.</p>
+    <p class="r">Fast alles war dunkel. Nur ein Geländer lag quer im Bild, nass und ruhig, wie eine Zeile, die jemand angefangen und nie zu Ende geschrieben hatte. Der Regen kam ohne Absicht. Er fiel nicht auf die Dinge, er legte sich zu ihnen.</p>
+    <p class="r">Er wusch die Hitze fort. Den Staub des Tages. Den Lärm, den man den ganzen Sommer über in den Schultern trägt, ohne es zu merken.</p>
+    <p class="r">Und was danach blieb, war nicht Stille.</p>
+    <p class="r beat">Es war das Geräusch der Stille.</p>
+  </div>
+</section>
+
+<!-- ═══ II — DER ARMADILLO ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <figure class="frame" style="--pos:55% 33%;--z:2">
+      <img src="assets/05_armadillo_ennio.jpg" alt="Der Armadillo" loading="lazy" decoding="async" width="691" height="1536">
+      <figcaption>der armadillo</figcaption>
+    </figure>
+    <p class="chapter r">Der Reisende</p>
+    <p class="r">Der kleine Armadillo stand auf dem Balkon, den Hut noch schief vom Tag, und atmete. Er hatte viele Nächte gesehen. Einige hatten ihm etwas gegeben, andere etwas genommen, und ein paar Narben trug er wie Landkarten unter dem Panzer. Er hatte gelernt, wenig zu erwarten.</p>
+    <p class="r beat">Aber er hatte nie verlernt zu staunen.</p>
+  </div>
+</section>
+
+<!-- ═══ III — DAS ZEICHEN ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <figure class="frame" style="--pos:50% 44%;--z:1.04">
+      <img src="assets/02_cuore_giardino.jpg" alt="Ein Herz aus Laub in einem Garten" loading="lazy" decoding="async" width="691" height="1536">
+      <figcaption>das zeichen</figcaption>
+    </figure>
+    <p class="chapter g r">Das Zeichen</p>
+    <p class="r">Dann veränderte sich das Licht. Kaum. Ein Schein von irgendwoher, ein Fenster, eine Laterne, vielleicht nur der Zufall — und da war es.</p>
+    <p class="r whisper">Ein winziges grünes Wesen auf dem Geländer.</p>
+    <p class="r">So klein, dass es die ganze Zeit dort hätte sitzen können.</p>
+    <p class="r">So grün, dass es aussah wie ein Stück Frühling, das sich in den August verirrt hatte.</p>
+    <p class="r">Der Armadillo beugte sich vor. Er fragte nicht, warum es ausgerechnet hier gelandet war, ausgerechnet jetzt. Erklärungen sind Türen, die man zumacht, während man denkt, man öffne sie.</p>
+    <p class="r beat">Er lächelte einfach.</p>
+  </div>
+</section>
+
+<!-- ═══ IV — ∆NNET ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <figure class="frame" style="--pos:50% 36%;--z:1.28">
+      <img src="assets/03_annette_figlia.jpg" alt="∆nnet" loading="lazy" decoding="async" width="691" height="1536">
+      <figcaption>∆nnet</figcaption>
+    </figure>
+    <p class="chapter r">Die Hand</p>
+    <p class="r">Dann drehte er sich um und sah ∆nnet an.</p>
+    <p class="r">Sie stand im Türrahmen, Regen im Haar, in dieser Haltung, die sie hat — nicht wartend, eher bereit. Frei auf eine Weise, die man nicht geschenkt bekommt, sondern sich erarbeitet.</p>
+    <p class="r">Er sagte nicht: <em>Komm mit mir.</em></p>
+    <p class="r">Er streckte ihr die Hand hin und sagte:</p>
+    <p class="r quote beat">„Wenn du magst — tanzen wir.“</p>
+    <p class="r">Ein Satz ohne Haken. Ohne Gewicht am Ende.</p>
+    <p class="r">Sie sah die Hand an. Dann nahm sie sie.</p>
+  </div>
+</section>
+
+<!-- ═══ V — DIE FLÜGEL ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <div class="glyph float gold"><img src="assets/08_cuore_oro.png" alt="Ein goldenes Herz" loading="lazy" decoding="async" width="1536" height="1536"></div>
+    <p class="chapter o r">Zwei Flügel</p>
+    <p class="r">Und in genau diesem Augenblick geschah das Unmögliche — nicht laut, nicht spektakulär, ohne Funken.</p>
+    <p class="r">Das kleine grüne Wesen öffnete langsam etwas, das es eine Sekunde zuvor noch nicht zu besitzen schien.</p>
+    <p class="r beat wing">Zwei Flügel.</p>
+    <p class="r">Sie entfalteten sich wie ein Gedanke, den man endlich zu Ende denkt. Weit, hell, unwahrscheinlich schön — und auf ihnen blieb, ganz bewusst, eine Spur des alten Grüns zurück. Ein schmaler Rand, eine Erinnerung, ein Beweis.</p>
+    <p class="r">Denn jede echte Verwandlung behält etwas von dem, was sie vorher war.</p>
+  </div>
+</section>
+
+<!-- ═══ VI — DER TANZ ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <figure class="frame" style="--pos:50% 50%">
+      <img src="assets/07_brindisi.jpg" alt="Zwei Gläser auf einem Balkon im Regen" loading="lazy" decoding="async" width="1152" height="1536">
+      <figcaption>der tanz</figcaption>
+    </figure>
+    <p class="chapter r">Der Tanz</p>
+    <p class="r">Der Schmetterling stieg auf und begann, um sie zu kreisen, während der Regen weiterfiel.</p>
+    <p class="r beat">∆nnet tanzte.</p>
+    <p class="r beat">Der Armadillo tanzte.</p>
+    <p class="r beat">Der Schmetterling tanzte.</p>
+    <p class="r">Und für einige Sekunden war nicht mehr zu erkennen, wer wem folgte. Der Regen tanzte mit, die Tropfen hingen in der Luft wie kleine angehaltene Lichter, und der Balkon war plötzlich groß genug für alles.</p>
+  </div>
+</section>
+
+<!-- ═══ VII — DER KUSS ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <div class="glyph float rose"><img src="assets/06_cuore_rosso.png" alt="Ein rotes Herz" loading="lazy" decoding="async" width="1536" height="1536"></div>
+    <p class="chapter d r">Der Kuss</p>
+    <p class="r">Dann kam der Schmetterling näher.</p>
+    <p class="r">Er verlangsamte sich in der feuchten Luft, zögerte einen Atemzug lang — nicht aus Angst, sondern aus Höflichkeit — und setzte sich ganz sacht auf die Lippen des Armadillo.</p>
+    <p class="r beat kiss">Und gab ihm einen Kuss.</p>
+    <p class="r">Nichts daran war Verlangen. Nichts daran wollte etwas.</p>
+    <p class="r">Es war das Gewicht einer Feder auf warmer Haut. Ein Berühren, das nichts nahm. Ein Kuss ohne Zeit: kein Vorher, kein Nachher, kein Versprechen, das die Nacht nicht hätte halten können.</p>
+    <p class="r">Nur Energie, die andere Energie erkennt.</p>
+    <p class="r">Ein Augenblick, der nicht festgehalten werden muss, um wahr zu sein.</p>
+    <hr class="rule d">
+    <p class="r">Dann hob der Schmetterling wieder ab.</p>
+    <p class="r beat">Denn was man liebt, muss man nicht halten. Manchmal muss man ihm nur genug Raum lassen, um weiterzutanzen.</p>
+  </div>
+</section>
+
+<!-- ═══ VIII — DAS LICHT ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <figure class="frame" style="--pos:50% 32%">
+      <img src="assets/01_fiori.jpg" alt="Ein Strauß Wiesenblumen" loading="lazy" decoding="async" width="691" height="1536">
+      <figcaption>das licht</figcaption>
+    </figure>
+    <p class="chapter r">Das Licht</p>
+    <p class="r">Der Armadillo verstand es, ohne es in Worte zu fassen.</p>
+    <p class="r">Manche Menschen kommen nicht mit Lärm in ein Leben. Sie kommen wie dieser winzige grüne Punkt in der Nacht: fast unsichtbar, ganz am Rand, unter allem anderen.</p>
+    <p class="r">Dann ändert sich das Licht.</p>
+    <p class="r beat">Und plötzlich sieht man sie.</p>
+    <hr class="rule">
+    <p class="r">Er hatte ∆nnet nicht in einen Schmetterling verwandelt. Das wäre eine kleine Magie gewesen, eine Zauberei für Ungeduldige.</p>
+    <p class="r">Die wirkliche Magie war, den Schmetterling erkannt zu haben, der längst frei in ihr war.</p>
+    <p class="r">Und sie, als sie seine Hand nahm, gehörte ihm nicht.</p>
+    <p class="r beat">Sie entschied sich nur, für diesen Moment, neben ihm zu tanzen.</p>
+  </div>
+</section>
+
+<!-- ═══ IX — EPILOG ═══ -->
+<section class="scene">
+  <div class="wrap">
+    <p class="chapter r">Der Regen</p>
+    <p class="r">Der Regen fiel weiter.</p>
+    <p class="r">Die Nacht blieb Nacht. Das Geländer blieb ein Geländer, nass und schmal und völlig gewöhnlich. Der kleine Balkon blieb genau dort, wo er immer gewesen war.</p>
+    <p class="r">Und trotzdem hatte sich etwas verschoben.</p>
+    <p class="r">Der Armadillo hob den Blick.</p>
+    <p class="r">Da tanzte der grüne Schmetterling noch ein paar Sekunden im Dunkeln — und dann war nicht mehr zu sagen, ob es ein Schmetterling war, ein beleuchteter Tropfen, oder ∆nnet, die lächelte.</p>
+    <p class="r">Er sah nicht genauer hin.</p>
+    <p class="r">Manche Dinge werden kleiner, wenn man sie klärt.</p>
+    <hr class="rule">
+    <p class="r beat">Zwei Hände, die sich weiter halten, ohne zu drücken.</p>
+    <p class="r beat">Und das Geräusch der Stille.</p>
+  </div>
+</section>
+
+<!-- ═══ WIDMUNG ═══ -->
+<section class="scene" id="finale">
+  <div class="wrap">
+    <div class="glyph float"><img src="assets/09_eiswagen_cuori.png" alt="Ein kleiner Wagen voller Herzen" loading="lazy" decoding="async" width="1536" height="1536"></div>
+    <hr class="rule">
+    <p class="dedication r">Für ∆nnet.</p>
+    <p class="glyphs r" aria-hidden="true"><svg class="sym gold" viewBox="0 0 24 24"><use href="#sym-hat"/></svg><svg class="sym rose" viewBox="0 0 24 24"><use href="#sym-cherry"/></svg><svg class="sym leaf" viewBox="0 0 24 24"><use href="#sym-wing"/></svg></p>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var body = document.body;
+  var gate = document.getElementById("gate");
+  var snd  = document.getElementById("snd");
+  var ply  = document.getElementById("ply");
+
+  /* ── Einblenden beim Scrollen ───────────────────────────── */
+  var els = document.querySelectorAll(".r,.frame,.glyph");
+  if (calm || !("IntersectionObserver" in window)) {
+    for (var i=0;i<els.length;i++) els[i].classList.add("in");
+  } else {
+    var io = new IntersectionObserver(function(es){
+      for (var j=0;j<es.length;j++) if (es[j].isIntersecting){
+        es[j].target.classList.add("in"); io.unobserve(es[j].target);
+      }
+    }, {rootMargin:"0px 0px -12% 0px", threshold:.12});
+    for (var k=0;k<els.length;k++) io.observe(els[k]);
+  }
+
+  /* ── Fortschrittslinie ──────────────────────────────────── */
+  var bar = document.getElementById("bar"), tick = false;
+  function paint(){
+    var h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = "scaleX(" + (h>0 ? Math.min(1, scrollY/h) : 0) + ")";
+    tick = false;
+  }
+  addEventListener("scroll", function(){ if(!tick){ tick = true; requestAnimationFrame(paint); } }, {passive:true});
+  paint();
+
+  /* ── Das Geräusch der Stille ────────────────────────────────
+     Warmer Regen aus gefiltertem Rauschen. Keine Datei, kein Netz. */
+  var ctx=null, master=null, audioOn=false, audioFail=false;
+
+  function buildAudio(){
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC){ audioFail = true; return false; }
+    try { ctx = new AC(); } catch(e){ audioFail = true; return false; }
+
+    var sr = ctx.sampleRate, len = Math.floor(sr*4), buf = ctx.createBuffer(2, len, sr), ch, i;
+    for (ch=0; ch<2; ch++){
+      var d = buf.getChannelData(ch), b = 0, peak = 0, v, w;
+      for (i=0;i<len;i++){
+        w = Math.random()*2-1;
+        b = (b + 0.028*w) / 1.028;          /* braunes Rauschen: warm, tief */
+        v = b*7.6 + w*0.13;                 /* eine Spur Tropfen-Textur zurück */
+        d[i] = v; if (v<0) v = -v; if (v>peak) peak = v;
+      }
+      var norm = 0.92/(peak||1);
+      for (i=0;i<len;i++) d[i] *= norm;
+      var f = Math.floor(sr*0.06);          /* weiche, nahtlose Schleife */
+      for (i=0;i<f;i++){ var t = i/f; d[i] = d[i]*t + d[len-f+i]*(1-t); }
+    }
+
+    var src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+    master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+
+    /* Regen */
+    var hp = ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=195; hp.Q.value=0.5;
+    var lp = ctx.createBiquadFilter(); lp.type="lowpass";  lp.frequency.value=1850; lp.Q.value=0.6;
+    var gA = ctx.createGain(); gA.gain.value=0.9;
+    src.connect(hp); hp.connect(lp); lp.connect(gA); gA.connect(master);
+
+    /* Tiefe darunter */
+    var lo = ctx.createBiquadFilter(); lo.type="lowpass"; lo.frequency.value=165; lo.Q.value=0.7;
+    var gB = ctx.createGain(); gB.gain.value=0.6;
+    src.connect(lo); lo.connect(gB); gB.connect(master);
+
+    /* langsames Atmen */
+    var lfo = ctx.createOscillator(); lfo.type="sine"; lfo.frequency.value=0.055;
+    var lg = ctx.createGain(); lg.gain.value=500;
+    lfo.connect(lg); lg.connect(lp.frequency); lfo.start();
+
+    src.start();
+    return true;
+  }
+
+  function fade(on){
+    if (!ctx || !master) return;
+    audioOn = on;
+    snd.setAttribute("aria-pressed", on ? "true" : "false");
+    var t = ctx.currentTime, g = master.gain;
+    g.cancelScheduledValues(t);
+    g.setValueAtTime(g.value, t);
+    g.linearRampToValueAtTime(on ? 0.26 : 0, t + (on ? 2.6 : 1.4));
+  }
+
+  function audio(on){
+    if (audioFail) return;
+    if (!ctx && !buildAudio()){ snd.hidden = true; return; }
+    if (ctx.state === "suspended" && ctx.resume) ctx.resume();
+    fade(on);
+  }
+
+  snd.addEventListener("click", function(){ audio(!audioOn); });
+
+  /* ── Auto-Scroll: zeitbasiert, langsam, unterbrechbar ───── */
+  var TARGET = 15,      /* px pro Sekunde */
+      RESUME = 5000,    /* ms Ruhe, bevor es leise weitergeht */
+      running = false, raf = 0, last = 0, pos = 0, applied = -1, speed = 0, idle = RESUME;
+
+  function maxScroll(){ return Math.max(0, document.documentElement.scrollHeight - innerHeight); }
+  function atEnd(){ return scrollY >= maxScroll() - 2; }
+
+  function nudge(){ idle = 0; speed = 0; pos = scrollY; }
+  ["touchstart","wheel","keydown","pointerdown"].forEach(function(ev){
+    addEventListener(ev, function(){ if (running) nudge(); }, {passive:true});
+  });
+
+  function step(ts){
+    raf = 0;
+    if (!running) return;
+    if (!last) last = ts;
+    var dt = (ts - last) / 1000; last = ts;
+    if (dt > 0.05) dt = 0.05;
+
+    if (applied >= 0 && Math.abs(scrollY - applied) > 2.5) nudge();   /* jemand scrollt selbst */
+
+    idle += dt * 1000;
+    var want = idle >= RESUME ? TARGET : 0;
+    speed += (want - speed) * Math.min(1, dt * 0.7);                  /* sanft anfahren */
+
+    pos += speed * dt;
+    var m = maxScroll();
+    if (pos >= m){ scrollTo(0, m); setRun(false); return; }           /* Ende: anhalten, keine Schleife */
+    scrollTo(0, pos);
+    applied = scrollY;
+    raf = requestAnimationFrame(step);
+  }
+
+  function setRun(on){
+    running = on;
+    ply.setAttribute("aria-pressed", on ? "true" : "false");
+    if (on){
+      pos = scrollY; applied = scrollY; last = 0;
+      if (!raf) raf = requestAnimationFrame(step);
+    } else if (raf){ cancelAnimationFrame(raf); raf = 0; }
+  }
+
+  ply.addEventListener("click", function(){
+    if (running){ setRun(false); return; }
+    if (atEnd()) scrollTo(0, 0);
+    idle = RESUME; speed = 0;
+    setRun(true);
+  });
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden && running) setRun(false);
+  });
+
+  /* ── Der erste Berührung: alles beginnt in derselben Geste ─ */
+  var started = false;
+  function begin(){
+    if (started) return; started = true;
+    audio(true);                                   /* AudioContext in der Nutzergeste */
+    body.classList.remove("gated");
+    body.classList.add("started");
+    gate.classList.add("gone");
+    setTimeout(function(){ if (gate.parentNode) gate.parentNode.removeChild(gate); }, 1500);
+    if (!calm){ idle = RESUME; setRun(true); }     /* bei reduzierter Bewegung: kein Auto-Scroll */
+  }
+  gate.addEventListener("pointerdown", begin);
+  gate.addEventListener("click", begin);
+  gate.addEventListener("keydown", function(e){ if (e.key===" "||e.key==="Enter") begin(); });
+  body.classList.add("gated");                     /* nur mit JS — ohne JS kein Schleier */
+})();
+</script>
+</body>
+</html>
