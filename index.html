@@ -533,10 +533,20 @@ h1 .accent{color:var(--gold)}
     g.linearRampToValueAtTime(on ? 0.26 : 0, t + (on ? 2.6 : 1.4));
   }
 
-  function audio(on){
+  async function audio(on){
     if (audioFail) return;
     if (!ctx && !buildAudio()){ snd.hidden = true; return; }
-    if (ctx.state === "suspended" && ctx.resume) ctx.resume();
+
+    try {
+      if (ctx.state === "suspended" && ctx.resume) {
+        await ctx.resume();
+      }
+    } catch(e) {
+      audioFail = true;
+      snd.hidden = true;
+      return;
+    }
+
     fade(on);
   }
 
