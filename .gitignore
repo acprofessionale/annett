@@ -1,0 +1,11 @@
+# Snapshot manuale precedente al lavoro su gate/autoplay: sostituito dalla
+# cronologia git, tenuto sul disco ma fuori dal repository.
+index.html.backup-before-autoplay
+
+# Backup ed editor
+*.backup
+*.bak
+*~
+
+# macOS
+.DS_Store
