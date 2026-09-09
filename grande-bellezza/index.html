@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#151512">
+  <meta name="description" content="La verità sta al centro. Grande Verità e Bellezza: un manifesto di Ennio su ascolto, scoperta, cura e responsabilità. Prima edizione testuale.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:title" content="La verità sta al centro — Grande Verità e Bellezza">
+  <meta property="og:description" content="Solo la parola è invenzione. Tutto il resto è scoperta. Un invito all'ascolto, alla cura e a un futuro più umano.">
+  <title>La verità sta al centro · Grande Verità e Bellezza</title>
+  <style>
+    :root { color-scheme: dark; --bg: #151512; --panel: #1c1c17; --ink: #f3eee2; --soft: #c6c0b0; --gold: #d8bd7b; --line: #4a4536; }
+    * { box-sizing: border-box; }
+    html { font-size: 18px; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: Georgia, 'Times New Roman', serif; line-height: 1.8; }
+    a { color: var(--gold); text-underline-offset: .23em; }
+    a:hover { color: var(--ink); }
+    a:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; }
+    .skip { position: absolute; left: 1rem; top: -6rem; background: var(--bg); padding: .7rem 1rem; z-index: 2; }
+    .skip:focus { top: 1rem; }
+    .shell { width: min(100% - 2.5rem, 64rem); margin-inline: auto; }
+    .masthead { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-block: 1.3rem; border-bottom: 1px solid var(--line); }
+    .label, nav, .edition, .byline, footer, summary { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    .label { color: var(--gold); font-size: .66rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+    nav { display: flex; gap: 1.2rem; font-size: .75rem; }
+    .hero { max-width: 49rem; margin-inline: auto; text-align: center; padding: clamp(3.3rem, 10vw, 7rem) 0 3.7rem; }
+    .edition { font-size: .7rem; color: var(--soft); letter-spacing: .08em; }
+    .point { width: .52rem; height: .52rem; background: var(--gold); border-radius: 50%; margin: 2rem auto; }
+    h1 { font-weight: 400; font-size: clamp(2.7rem, 8vw, 5.5rem); line-height: 1.08; letter-spacing: -.035em; margin: 0 0 2rem; text-wrap: balance; }
+    h1 span { color: var(--gold); }
+    blockquote { margin: 0; font-size: clamp(1.1rem, 3vw, 1.5rem); line-height: 1.65; }
+    blockquote p { margin: 0; }
+    .byline { color: var(--soft); font-size: .78rem; margin-top: 1.25rem; }
+    .reading { max-width: 38rem; margin-inline: auto; padding-bottom: 3rem; }
+    .opening { font-size: 1.17rem; border-top: 1px solid var(--line); padding-top: 2rem; }
+    h2 { font-size: 1.45rem; font-weight: 400; color: var(--gold); line-height: 1.35; margin: 2.6rem 0 .85rem; }
+    p { margin: 0 0 1.15rem; }
+    .invitation { border-block: 1px solid var(--line); padding: 2rem 0; margin: 2.4rem 0; font-size: 1.36rem; line-height: 1.5; text-align: center; }
+    details { background: var(--panel); border: 1px solid var(--line); padding: 1rem 1.2rem; margin-top: 2.5rem; font-size: .85rem; color: var(--soft); }
+    summary { cursor: pointer; font-size: .82rem; color: var(--ink); }
+    details p:first-of-type { margin-top: 1rem; }
+    details p:last-child { margin-bottom: 0; }
+    footer { border-top: 1px solid var(--line); padding: 1.5rem 0 2.3rem; color: var(--soft); font-size: .72rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    @media (max-width: 500px) { html { font-size: 17px; } .shell { width: calc(100% - 2rem); } .masthead { align-items: flex-start; } .label { max-width: 11rem; } nav { gap: .7rem; font-size: .7rem; } .hero { padding-top: 3.2rem; } }
+    @media print { :root { --bg: #fff; --panel: #fff; --ink: #111; --soft: #333; --gold: #333; --line: #888; } body { font-size: 11pt; } nav, .skip, details { display: none; } .hero { padding: 2rem 0; } h1 { font-size: 38pt; } .shell, .reading { width: 100%; max-width: none; } h2 { break-after: avoid; } p { orphans: 3; widows: 3; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#manifesto">Vai al manifesto</a>
+  <div class="shell">
+    <header class="masthead">
+      <div class="label">Grande Verità e Bellezza</div>
+      <nav aria-label="Navigazione della pagina"><a href="#manifesto">Manifesto</a><a href="#edizione">Edizione</a></nav>
+    </header>
+    <main>
+      <div class="hero">
+        <p class="edition">ITALIANO · 9 SETTEMBRE 2026 · v0.1</p>
+        <div class="point" aria-hidden="true"></div>
+        <h1>La verità sta<br><span>al centro.</span></h1>
+        <blockquote><p>Solo la parola è invenzione.<br>Tutto il resto è scoperta.</p></blockquote>
+        <p class="byline">Ennio</p>
+      </div>
+      <article class="reading" id="manifesto" aria-label="Manifesto introduttivo">
+        <h2>Perché nasce questo spazio</h2>
+        <p class="opening">Questo spazio nasce per dare continuità a una ricerca fatta di parole, immagini, ascolto e incontri. Un lavoro di Ennio, sviluppato anche attraverso il dialogo con strumenti di intelligenza artificiale, nel quale l'intuizione cerca una forma comprensibile e la forma torna a interrogare l'esperienza.</p>
+        <p>Non vogliamo raccontare tutto insieme. Vogliamo custodire il percorso e condividere, un passo alla volta, ciò che può aprire una conversazione vera.</p>
+        <h2>Il centro non è un piedistallo</h2>
+        <p>«La verità sta al centro» è un invito a non mettere noi stessi al posto di ciò che cerchiamo. Significa lasciare spazio all'ascolto, al confronto e alla possibilità di essere corretti.</p>
+        <p>Il centro non è la media delle opinioni né il premio di chi alza maggiormente la voce. È un orientamento: distinguere ciò che osserviamo da ciò che interpretiamo, ciò che immaginiamo da ciò che possiamo sostenere.</p>
+        <h2>La parola e la scoperta</h2>
+        <p>«Solo la parola è invenzione. Tutto il resto è scoperta» è il nucleo poetico di questa ricerca: diamo un nome alle cose, ma il nome non esaurisce ciò che incontriamo.</p>
+        <p>È una formulazione filosofico-poetica, non una legge scientifica. Chiede di guardare nuovamente, non di smettere di fare domande.</p>
+        <h2>La bellezza diventa cura</h2>
+        <p>La Grande Bellezza che cerchiamo non è una perfezione da esibire. È un'attenzione da coltivare: nei gesti di ospitalità, nella gratitudine, nella disponibilità a custodire ciò che è fragile.</p>
+        <p>Una parola trova valore quando non occupa soltanto uno spazio, ma aiuta qualcuno ad abitarlo. Un'immagine quando invita a vedere. Un ascolto quando lascia posto anche al silenzio.</p>
+        <h2>Un'opera, più forme</h2>
+        <p>Il manifesto è il nucleo; le immagini, i testi brevi, le traduzioni e le eventuali esperienze sonore potranno esserne espressioni autonome. Ogni nuova forma dovrà restare comprensibile anche a chi incontra il progetto per la prima volta.</p>
+        <p>Questo archivio nasce per conservare origine, versioni e correzioni. Non per accumulare tutto, ma per non perdere il rapporto fra una traccia e il suo significato. La prima edizione è in italiano; le altre lingue potranno essere pubblicate separatamente.</p>
+        <h2>Responsabilità, prima dell'esposizione</h2>
+        <p>Le persone non sono materiali promozionali. Questo spazio non pubblica conversazioni private né trasforma l'intimità degli incontri in una dimostrazione del valore dell'opera.</p>
+        <p>Gli strumenti di intelligenza artificiale partecipano all'elaborazione; non sostituiscono il giudizio umano e non rendono vera un'affermazione per il solo fatto di formularla bene. Fonti, attribuzioni e contenuti multimediali richiedono una verifica distinta.</p>
+        <h2>Radici profonde, futuro aperto</h2>
+        <p>Vogliamo ricevere ciò che ci precede senza limitarci a ripeterlo. Conservare una memoria che possa nutrire nuovi gesti, nuove domande, nuove relazioni.</p>
+        <p>Non chiediamo adesione a una formula. Offriamo un luogo nel quale fermarsi, leggere e, magari, riprendere il cammino con maggiore attenzione.</p>
+        <p class="invitation">Radici profonde, per far crescere<br>un futuro più umano.<br>Un passo alla volta.</p>
+        <p>Ennio</p>
+        <details id="edizione" open>
+          <summary>Prima edizione testuale · Cosa contiene</summary>
+          <p>Questa è la prima pubblicazione del manifesto introduttivo, non l'archiviazione completa delle opere precedenti. Non include l'immagine originale del manifesto, file audio o un player musicale attivo. Le versioni visive e sonore saranno aggiunte solo dopo la verifica dei relativi originali e delle condizioni di utilizzo.</p>
+          <p>v0.1 — 9 settembre 2026. <a href="https://github.com/acprofessionale/annett/blob/master/grande-bellezza/README.md">Testo e registro delle versioni su GitHub</a>.</p>
+        </details>
+      </article>
+    </main>
+    <footer><span>Grande Verità e Bellezza · Un progetto di Ennio</span><span>Prima edizione italiana · v0.1</span></footer>
+  </div>
+</body>
+</html>
