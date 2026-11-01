@@ -11,6 +11,14 @@ Eine digitale Geschichte über Regen, Stille, Verwandlung, Freiheit und Tanz.
 Am besten mit Kopfhörern erleben.  
 Die erste Berührung startet die Erfahrung — inklusive eines vollständig im Browser erzeugten Regensoundscapes.
 
+## II · Das Maß der Stille / La misura del silenzio
+
+https://acprofessionale.github.io/annett/la-misura-del-silenzio/
+
+Der zweite Teil dieses Weges: ein Gedicht von Ennio für Annette, auf Deutsch und Italienisch, mit Originalfotografie, PDF, Titelbild und einem stillen Kurzfilm. Beide Seiten sind direkt ohne Anmeldung zugänglich und miteinander verbunden.
+
+Die Dateien liegen vollständig in `la-misura-del-silenzio/`. Die Seite benötigt keinen Zugang zu ChatGPT Sites und lädt ihre Medien über relative Pfade aus diesem Repository.
+
 ## Der Regen
 
 Keine Audiodatei. Kein Stream. Kein Netz.
